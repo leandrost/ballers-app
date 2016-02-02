@@ -22,7 +22,7 @@ export default class Example extends React.Component {
             <Schema name="withoutAnimation"/>
 
             <Route name="newCourt" component={NewCourt} schema="fadeAndroid" />
-            <Route name="courts" component={Courts} />
+            <Route name="courts" component={Courts} schema="fadeAndroid" />
             <Route name="map" component={MapExample} />
           </Router>
         );

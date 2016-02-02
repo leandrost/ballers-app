@@ -125,4 +125,5 @@ dependencies {
     compile project(':react-native-vector-icons')
     compile project(':reactnativemapboxgl')
     compile project(':react-native-i18n')
+    compile project(':reactdate')
 }
