@@ -2,9 +2,10 @@ import React, {
   StyleSheet,
   Text,
   View,
+  NativeModules,
   TextInput,
   TouchableHighlight,
-  NativeModules,
+  Picker,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -14,6 +15,7 @@ import {
   Icon,
   Divider,
   Avatar,
+  CheckboxGroup,
 } from 'react-native-material-design';
 
 import Screen from '../components/Screen';
@@ -47,9 +49,12 @@ export default class NewCourt extends React.Component {
     return "00:00";
   }
 
+  save(){
+  }
+
   render(){
     return (
-      <Screen {...this.props} icon="close" onIconPress={Actions.courts}>
+      <Screen {...this.props} icon="close" onIconPress={Actions.courts} actions={[{ icon: "done", onPress: this.save }]}>
         <View style={styles.court}>
           <TextInput style={styles.courtName}  placeholder={t("courtName")}></TextInput>
           <Avatar style={styles.photCamera} icon="photo-camera"></Avatar>
@@ -70,6 +75,13 @@ export default class NewCourt extends React.Component {
         </View>
 
         <View style={styles.schedules}>
+          <Picker
+            selectedValue={this.state.language}
+            onValueChange={(lang) => this.setState({language: lang})}>
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+          </Picker>
+
           <TextInput style={styles.when}>
           </TextInput>
           <View style={[styles.row, {marginBottom: 10}]}>

@@ -27,6 +27,7 @@ export default class Screen extends React.Component {
           overrides={{backgroundColor: "#292929"}}
           icon={ this.props.icon || "menu" }
           onIconPress={this.props.onIconPress}
+          actions={this.props.actions}
         />
         <View style={styles.children}>
           {this.props.children}
