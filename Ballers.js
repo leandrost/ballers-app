@@ -9,6 +9,7 @@ import {
 import Courts from './app/screens/Courts';
 import NewCourt from './app/screens/NewCourt';
 import MapExample from './app/screens/MapExample';
+import Location from './app/screens/Location';
 
 import { Router, Route, Schema, Actions } from 'react-native-router-flux';
 
@@ -19,8 +20,10 @@ export default class Example extends React.Component {
             <Schema name="fadeAndroid" sceneConfig={Navigator.SceneConfigs.FadeAndroid}/>
             <Schema name="modal" sceneConfig={Navigator.SceneConfigs.FloatFromBottom}/>
             <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
+            <Schema name="toTheback" sceneConfig={Navigator.SceneConfigs.toTheBack}/>
             <Schema name="withoutAnimation"/>
 
+            <Route name="location" component={Location} schema="toTheBack" />
             <Route name="newCourt" component={NewCourt} schema="fadeAndroid" />
             <Route name="courts" component={Courts} schema="fadeAndroid" />
             <Route name="map" component={MapExample} />

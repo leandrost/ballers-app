@@ -1,0 +1,27 @@
+import React, {
+  StyleSheet,
+  Text,
+  View,
+  NativeModules,
+  TextInput,
+  TouchableHighlight,
+  Picker,
+} from 'react-native';
+
+import { Actions } from 'react-native-router-flux';
+
+import Screen from '../components/Screen';
+
+let t = T("screens.newCourt");
+
+export default class Location extends React.Component {
+  render(){
+    return (
+      <Screen {...this.props}
+        icon="arrow-back"
+        onIconPress={Actions.newCourt}
+        actions={[{ icon: "done", onPress: this.props.onSelect  }]}>
+      </Screen>
+    );
+  }
+}

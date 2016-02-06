@@ -60,7 +60,7 @@ export default class NewCourt extends React.Component {
           <Avatar style={styles.photCamera} icon="photo-camera"></Avatar>
         </View>
 
-        <TouchableHighlight underlayColor="#ccc" onPress={Actions.location}>
+        <TouchableHighlight underlayColor="#ccc">
           <View style={styles.section}>
             <Icon name="location-on" />
             <Text style={styles.sectionTitle}>{t("location")}</Text>
