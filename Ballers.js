@@ -10,6 +10,7 @@ import Courts from './app/screens/Courts';
 import NewCourt from './app/screens/NewCourt';
 import MapExample from './app/screens/MapExample';
 import Location from './app/screens/Location';
+import Schedule from './app/screens/Schedule';
 
 import { Router, Route, Schema, Actions } from 'react-native-router-flux';
 
@@ -23,9 +24,10 @@ export default class Example extends React.Component {
             <Schema name="toTheback" sceneConfig={Navigator.SceneConfigs.toTheBack}/>
             <Schema name="withoutAnimation"/>
 
-            <Route name="location" component={Location} schema="toTheBack" />
-            <Route name="newCourt" component={NewCourt} schema="fadeAndroid" />
-            <Route name="courts" component={Courts} schema="fadeAndroid" />
+            <Route name="newCourt" component={NewCourt} />
+            <Route name="location" component={Location} />
+            <Route name="schedule" component={Schedule} />
+            <Route name="courts" component={Courts} />
             <Route name="map" component={MapExample} />
           </Router>
         );

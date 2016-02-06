@@ -75,33 +75,13 @@ export default class NewCourt extends React.Component {
         </View>
 
         <View style={styles.schedules}>
-          <Picker
-            selectedValue={this.state.language}
-            onValueChange={(lang) => this.setState({language: lang})}>
-            <Picker.Item label="Semanalmente" value="weekly" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
 
-          <TextInput style={styles.when}>
-          </TextInput>
-          <View style={[styles.row, {marginBottom: 10}]}>
-            <TouchableHighlight style={styles.time} underlayColor="#ccc" onPress={this.handleStartAtClick.bind(this)}>
-              <Text>
-                {this.state.startAt}
-              </Text>
-            </TouchableHighlight>
-            <TouchableHighlight style={styles.time} underlayColor="#ccc" onPress={this.handleEndAtClick.bind(this)}>
-              <Text>
-                {this.state.endAt || t("endTime")}
-              </Text>
-            </TouchableHighlight>
-          </View>
-          <TouchableHighlight style={[styles.addSchedule]} underlayColor="#ccc">
-            <View style={[styles.row]}>
-              <Icon name="add" />
-              <Text>{t("addSchedule")}</Text>
-            </View>
-          </TouchableHighlight>
+	        <TouchableHighlight style={[styles.addSchedule]} underlayColor="#ccc" onPress={Actions.schedule}>
+	          <View style={[styles.row]}>
+	            <Icon name="add" />
+	            <Text>{t("addSchedule")}</Text>
+	          </View>
+	        </TouchableHighlight>
         </View>
 
         <Divider></Divider>
@@ -120,7 +100,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
   },
   courtName: {
-    flex: 7,
+    flex: 1,
     marginRight: 10,
   },
   sectionTitle: {
@@ -143,12 +123,6 @@ var styles = StyleSheet.create({
     paddingBottom: 10,
   },
   addSchedule: {
-  },
-  time: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   instructions: {
     textAlign: 'center',
