@@ -15,12 +15,13 @@ import { T }  from '../utils/';
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const homePlace = {description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
-const workPlace = {description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
-
 let t = T("screens.newCourt");
 
 export default class Location extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   search(text) {
     console.log(text);
@@ -33,7 +34,6 @@ export default class Location extends React.Component {
         const responseJSON = JSON.parse(request.responseText);
         console.log(responseJSON);
       } else {
-        debugger
         console.warn("google places autocomplete: request could not be completed or has been aborted");
       }
     };
@@ -44,27 +44,31 @@ export default class Location extends React.Component {
     request.send();
   }
 
+  handlePlacePress (data, details){
+    let callback = this.props.onPlacePress;
+    if (callback) {
+      callback({ description: data.description });
+    }
+    Actions.pop();
+  }
+
   render(){
     let getDefaultValue = () => { return ''; }
     return (
       <Screen {...this.props}
         icon="arrow-back"
         onIconPress={Actions.newCourt}
-        actions={[{ icon: "done", onPress: this.props.onSelect  }]}>
-
-        <TextInput onChangeText={this.search}></TextInput>
-
+      >
         <GooglePlacesAutocomplete
           placeholder='Search'
           minLength={2}
           autoFocus={true}
           fetchDetails={true}
-          onPress={this.handlePlacePress}
+          onPress={this.handlePlacePress.bind(this)}
           getDefaultValue={getDefaultValue}
-          query={{ key: 'AIzaSyCBJd-XszceGyJtRP0KhTL09CSja0Yv7fc' }}
-          styles={{ description: { fontWeight: 'bold', }, predefinedPlacesDescription: { color: '#1faadb', }, }}
-          currentLocationLabel="Current location"
-          predefinedPlaces={[homePlace, workPlace]}
+          query={{ key: 'AIzaSyCBJd-XszceGyJtRP0KhTL09CSja0Yv7fc', language: "pt-BR",  }}
+          nearbyPlacesAPI="GooglePlacesSearch"
+          GooglePlacesSearchQuery={{ rankby: 'distance', }}
         />
       </Screen>
     );

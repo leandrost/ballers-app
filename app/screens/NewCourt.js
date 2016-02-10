@@ -24,11 +24,13 @@ import { T }  from '../utils/';
 let t = T("screens.newCourt");
 
 export default class NewCourt extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       startAt: this.nextHour(),
       endAt: null,
+      place: { },
     }
   }
 
@@ -49,21 +51,28 @@ export default class NewCourt extends React.Component {
     return "00:00";
   }
 
-  save(){
+  handleLocationPress() {
+    Actions.location({ onPlacePress: this.setPlace.bind(this) })
+  }
+
+  setPlace(place) {
+    this.setState({ place: place });
   }
 
   render(){
+    let place = this.state.place.description || t("location");
+
     return (
       <Screen {...this.props} icon="close" onIconPress={Actions.courts} actions={[{ icon: "done", onPress: this.save }]}>
         <View style={styles.court}>
-          <TextInput style={styles.courtName}  placeholder={t("courtName")}></TextInput>
+          <TextInput style={styles.courtName} placeholder={t("courtName")}></TextInput>
           <Avatar style={styles.photCamera} icon="photo-camera"></Avatar>
         </View>
 
-        <TouchableHighlight underlayColor="#ccc" onPress={Actions.location}>
+        <TouchableHighlight underlayColor="#ccc" onPress={this.handleLocationPress.bind(this)}>
           <View style={styles.section}>
             <Icon name="location-on" />
-            <Text style={styles.sectionTitle}>{t("location")}</Text>
+            <Text style={styles.sectionTitle}>{ place }</Text>
           </View>
         </TouchableHighlight>
 
@@ -100,7 +109,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
   },
   courtName: {
-    flex: 1,
+    flex: 7,
     marginRight: 10,
   },
   sectionTitle: {
