@@ -57,10 +57,10 @@ export default class Location extends React.Component {
     return (
       <Screen {...this.props}
         icon="arrow-back"
-        onIconPress={Actions.newCourt}
+        onIconPress={Actions.pop}
       >
         <GooglePlacesAutocomplete
-          placeholder='Search'
+          placeholder={t(".searchPlace")}
           minLength={2}
           autoFocus={true}
           fetchDetails={true}

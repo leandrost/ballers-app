@@ -16,21 +16,21 @@ export default class Screen extends React.Component {
 
   getTitle() {
     let name = this.props.name;
-    return t(`${name}.title`, {defaultValue: name});
+    return t(`.${name}.title`, { defaultValue: name });
   }
 
   render() {
     return(
-      <View style={styles.container}>
+      <View style={ styles.container }>
         <Toolbar
-          title={this.getTitle()}
-          overrides={{backgroundColor: "#292929"}}
+          title={ this.getTitle() }
+          overrides={ { backgroundColor: "#292929" } }
           icon={ this.props.icon || "menu" }
-          onIconPress={this.props.onIconPress}
-          actions={this.props.actions}
+          onIconPress={ this.props.onIconPress }
+          actions={ this.props.actions }
         />
-        <View style={styles.children}>
-          {this.props.children}
+        <View style={ styles.children }>
+          { this.props.children }
         </View>
       </View>
     );

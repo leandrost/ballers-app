@@ -60,19 +60,19 @@ export default class NewCourt extends React.Component {
   }
 
   render(){
-    let place = this.state.place.description || t("location");
+    let location = this.state.place.description || t(".location");
 
     return (
       <Screen {...this.props} icon="close" onIconPress={Actions.courts} actions={[{ icon: "done", onPress: this.save }]}>
         <View style={styles.court}>
-          <TextInput style={styles.courtName} placeholder={t("courtName")}></TextInput>
+          <TextInput style={styles.courtName} placeholder={t(".courtName")}></TextInput>
           <Avatar style={styles.photCamera} icon="photo-camera"></Avatar>
         </View>
 
         <TouchableHighlight underlayColor="#ccc" onPress={this.handleLocationPress.bind(this)}>
           <View style={styles.section}>
             <Icon name="location-on" />
-            <Text style={styles.sectionTitle}>{ place }</Text>
+            <Text style={styles.sectionTitle} numberOfLines={2}>{ location }</Text>
           </View>
         </TouchableHighlight>
 
@@ -80,7 +80,7 @@ export default class NewCourt extends React.Component {
 
         <View style={styles.scheduleSection}>
           <Icon name="schedule" />
-          <Text style={styles.sectionTitle}>{t("schedule")}</Text>
+          <Text style={styles.sectionTitle}>{t(".schedule")}</Text>
         </View>
 
         <View style={styles.schedules}>
@@ -88,7 +88,7 @@ export default class NewCourt extends React.Component {
 	        <TouchableHighlight style={[styles.addSchedule]} underlayColor="#ccc" onPress={Actions.schedule}>
 	          <View style={[styles.row]}>
 	            <Icon name="add" />
-	            <Text>{t("addSchedule")}</Text>
+	            <Text>{t(".addSchedule")}</Text>
 	          </View>
 	        </TouchableHighlight>
         </View>
@@ -114,6 +114,7 @@ var styles = StyleSheet.create({
   },
   sectionTitle: {
     marginLeft: 10,
+    flex: 1,
   },
   section: {
     padding: 10,

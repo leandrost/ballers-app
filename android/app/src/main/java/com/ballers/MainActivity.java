@@ -12,6 +12,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import me.nucleartux.date.ReactDatePackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -45,6 +46,7 @@ public class MainActivity extends ReactActivity {
         , new ReactNativeMapboxGLPackage()
         , new ReactNativeI18n()
         , new ReactDatePackage(this)
+        , new ReactMaterialKitPackage()
       );
     }
 }

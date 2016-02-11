@@ -126,4 +126,5 @@ dependencies {
     compile project(':reactnativemapboxgl')
     compile project(':react-native-i18n')
     compile project(':reactdate')
+    compile project(':RNMaterialKit')
 }

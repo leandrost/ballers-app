@@ -22,7 +22,7 @@ export default class Courts extends React.Component {
     return(
       <Screen {...this.props}>
         <View style={styles.container}>
-          <Text>{t("noCourtsFound")}</Text>
+          <Text>{t(".noCourtsFound")}</Text>
         </View>
         <ActionButton
           buttonColor="#259b23"
