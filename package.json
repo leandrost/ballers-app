@@ -12,6 +12,7 @@
     "react-native-date": "^1.0.3",
     "react-native-google-places-autocomplete": "^1.1.6",
     "react-native-i18n": "0.0.7",
+    "react-native-image-picker": "^0.14.3",
     "react-native-mapbox-gl": "^3.1.1",
     "react-native-maps": "^0.2.1",
     "react-native-material-design": "^0.3.1",

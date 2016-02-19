@@ -73,7 +73,7 @@ export default class Schedule extends React.Component {
   renderWeekday(weekday) {
     return (
       <View key={weekday.key} style={styles.weekday}>
-        <MKCheckbox checked={weekday.checked} />
+        <MKCheckbox checked={true} fillColor="#f00" />
         <Text style={styles.label}>{ weekday.name }</Text>
       </View>
     );
@@ -131,6 +131,8 @@ export default class Schedule extends React.Component {
         </MKButton>
       </View>
 
+
+      <MKCheckbox checked={true} fillColor={"#f00"} />
 			</Screen>
 		)
 	}

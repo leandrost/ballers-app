@@ -18,3 +18,6 @@ project(':reactdate').projectDir = new File(rootProject.projectDir, '../node_mod
 include ':RNMaterialKit'
 project(':RNMaterialKit').projectDir = file('../node_modules/react-native-material-kit/android')
 
+include ':react-native-image-picker'
+project(':react-native-image-picker').projectDir = new File(settingsDir, '../node_modules/react-native-image-picker/android')
+

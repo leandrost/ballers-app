@@ -7,15 +7,20 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.List;
 
+import android.content.Intent;
+
 //custom plugins
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import me.nucleartux.date.ReactDatePackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
+import com.imagepicker.ImagePickerPackage;
+
 
 public class MainActivity extends ReactActivity {
 
+    private ImagePickerPackage mImagePicker;
     /**
      * Returns the name of the main component registered from JavaScript.
      * This is used to schedule rendering of the component.
@@ -40,6 +45,8 @@ public class MainActivity extends ReactActivity {
    */
     @Override
     protected List<ReactPackage> getPackages() {
+      mImagePicker = new ImagePickerPackage(this);
+
       return Arrays.<ReactPackage>asList(
         new MainReactPackage()
         , new VectorIconsPackage()
@@ -47,6 +54,14 @@ public class MainActivity extends ReactActivity {
         , new ReactNativeI18n()
         , new ReactDatePackage(this)
         , new ReactMaterialKitPackage()
+        , mImagePicker
       );
     }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mImagePicker.handleActivityResult(requestCode, resultCode, data);
+    }
 }
+
