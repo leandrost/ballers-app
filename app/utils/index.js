@@ -4,11 +4,12 @@ import {
   setTheme,
 } from 'react-native-material-kit';
 
-const Colors = {
+export const Colors = {
   Primary: "#292929",
   RGBPrimary: "41,41,41",
   Accent: "#259b23",
   RGBAccent: "37,155,35",
+  LightGray: "#ccc",
 }
 
 setTheme({

@@ -24,6 +24,7 @@ export default class Screen extends React.Component {
       <View style={ styles.container }>
         <Toolbar
           title={ this.getTitle() }
+          styles={ styles.toolbar }
           overrides={ { backgroundColor: "#292929" } }
           icon={ this.props.icon || "menu" }
           onIconPress={ this.props.onIconPress }
@@ -42,8 +43,11 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#EEEEEE",
   },
+  toolbar: {
+    marginBottom: 100,
+  },
   children: {
     flex: 1,
-    marginTop: 60,
+    marginTop: 56,
   }
 });
