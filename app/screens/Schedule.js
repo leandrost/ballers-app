@@ -6,7 +6,6 @@ import React, {
   Picker,
   NativeModules,
   TouchableHighlight,
-  ListView,
 } from 'react-native';
 
 import {
@@ -23,60 +22,82 @@ import {
 
 import Screen from '../components/Screen';
 import { T }  from '../utils/';
+import { Colors }  from '../utils/';
 import { Actions } from 'react-native-router-flux';
 import  moment  from 'moment';
 
+const DateAndroid = NativeModules.DateAndroid;
+const HH_MM = "HH:mm";
 let t = T("screens.schedule");
+
+class WeekdayCheck extends React.Component {
+
+  constructor(props) {
+    super(props);
+    let stateColor = this.isCurrentDayWeek() ? Colors.Accent : null;
+    this.state = { statusColor: stateColor, }
+  }
+
+  isCurrentDayWeek(){
+    return (moment().format("d") == this.props.dayNumber);
+  }
+
+  toggle() {
+    let color = this.state.statusColor ?  null : Colors.Accent;
+    this.setState({ statusColor: color });
+  }
+
+  render() {
+    let dayNames = t("date.abbr_day_names");
+    return (
+      <TouchableHighlight
+        style={[styles.weekday, { backgroundColor: this.state.statusColor }]}
+        underlayColor={Colors.Accent}
+        onPress={ this.toggle.bind(this) }
+      >
+        <Text style={styles.label}>{ dayNames[this.props.dayNumber] }</Text>
+      </TouchableHighlight>
+    );
+  }
+
+}
 
 export default class Schedule extends React.Component {
 
   constructor(props) {
     super(props);
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    let weekdays = this.getWeekDays();
     this.state = {
       repetition: "weekly",
       startAt: this.nextHour(),
       endAt: null,
-      dataSource: ds.cloneWithRows(weekdays),
     }
   }
 
   handleStartAtClick() {
-    NativeModules.DateAndroid.showTimepicker(() => {}, (hour, minute) => {
-      this.setState({ startAt: `${hour}:${minute}` });
-    })
+    this.showTimePickerFor("startAt", this.nextHour());
   }
 
   handleEndAtClick() {
-    NativeModules.DateAndroid.showTimepicker(() => {}, (hour, minute) => {
-      this.setState({ endAt: `${hour}:${minute}` });
-    })
+    this.showTimePickerFor("endAt", this.nextHour());
+  }
+
+  showTimePickerFor(attr, initialDate) {
+    let setTime = (hour, minute) => {
+      let attrState = {};
+      attrState[attr] = moment(`${hour}:${minute}`, HH_MM).format(HH_MM);
+      this.setState(attrState);
+    }
+    DateAndroid.showTimepickerWithInitialTime(initialDate, () => {}, setTime);
   }
 
   nextHour(){
-    // TODO use moment to fetch the next hour
-    return "00:00";
+    now = moment();
+    now.add(1, "hour");
+    return now.format("HH:00");
   }
 
-  getWeekDays() {
-    let weekdays = [];
-    let names = t("date.abbr_day_names");
-
-    names.forEach((name, index) => {
-      weekdays.push({ key: index, name: name, checked: false });
-    });
-
-    return weekdays;
-  }
-
-  renderWeekday(weekday) {
-    return (
-      <View key={weekday.key} style={styles.weekday}>
-        <MKCheckbox checked={true} fillColor="#f00" />
-        <Text style={styles.label}>{ weekday.name }</Text>
-      </View>
-    );
+  handlAddSchedule() {
+    console.log(this.state);
   }
 
 	render() {
@@ -97,11 +118,16 @@ export default class Schedule extends React.Component {
         </Picker>
 
         <View style={styles.row}>
-          {
-            this.getWeekDays().map((weekday) => {
-              return this.renderWeekday(weekday)
-            })
-          }
+          <WeekdayCheck dayNumber={0} />
+          <WeekdayCheck dayNumber={1} />
+          <WeekdayCheck dayNumber={2} />
+          <WeekdayCheck dayNumber={3} />
+        </View>
+
+        <View style={styles.row}>
+          <WeekdayCheck dayNumber={4} />
+          <WeekdayCheck dayNumber={5} />
+          <WeekdayCheck dayNumber={6} />
         </View>
 
         <View style={[styles.row, styles.schedule]}>
@@ -123,22 +149,19 @@ export default class Schedule extends React.Component {
           </TouchableHighlight>
         </View>
 
-        <MKButton {...MKButton.coloredButton().toProps()}>
-          <Text pointerEvents="none"
-            style={{color: 'white', fontWeight: 'bold',}}>
-            {t("done")}
+        <MKButton {...MKButton.coloredButton().toProps()} onPress={ this.handlAddSchedule.bind(this) }>
+          <Text style={{color: 'white', fontWeight: 'bold',}}>
+            { t("done") }
           </Text>
         </MKButton>
       </View>
 
-
-      <MKCheckbox checked={true} fillColor={"#f00"} />
 			</Screen>
 		)
 	}
 }
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     margin: 10,
   },
@@ -154,6 +177,12 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 3,
+    borderRadius: 35,
+    borderWidth: 0.5,
+    borderColor: Colors.Accent,
+    padding: 10,
+    width: 70,
+    height: 70,
   },
   label: {
     color: "black",

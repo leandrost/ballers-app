@@ -32,6 +32,8 @@ import { T }  from '../utils/';
 
 let t = T("screens.newCourt");
 
+const FlatButton = new MKButton.flatButton().build();
+
 export default class NewCourt extends React.Component {
 
   constructor(props) {
@@ -39,6 +41,7 @@ export default class NewCourt extends React.Component {
     this.state = {
       description: null,
       imageSource: { },
+      //imageSource: { uri: "http://brianaspinall.com/wp-content/uploads/2015/06/Uli%C4%8Dna-ko%C5%A1arka.jpg" },
       place: { },
       startAt: null,
       endAt: null,
@@ -53,6 +56,10 @@ export default class NewCourt extends React.Component {
     this.setState({ imageSource: source });
   }
 
+  removeImage(source) {
+    this.setImage({});
+  }
+
   setPlace(place) {
     this.setState({ place: place });
   }
@@ -62,37 +69,36 @@ export default class NewCourt extends React.Component {
 
     return (
       <Screen {...this.props} icon="close" onIconPress={Actions.courts} actions={[{ icon: "done", onPress: this.save }]}>
-        <Image style={styles.image} source={this.state.imageSource}></Image>
+
+        <Image style={styles.image} source={this.state.imageSource}>
+          <FlatButton style={styles.removeImage} onPress={ this.removeImage.bind(this) }>
+            <Icon name="delete" color="#fff" size={25} />
+            <Text style={{ color: 'white', fontWeight: 'bold',}}>
+              Remove
+            </Text>
+          </FlatButton>
+        </Image>
+
         <View style={styles.court}>
           <TextInput style={styles.courtName} placeholder={t(".courtName")}></TextInput>
           <ImagePickerButton onSelect={ this.setImage.bind(this) }/>
         </View>
 
         <TouchableHighlight underlayColor="#ccc" onPress={this.handleLocationPress.bind(this)}>
-          <View style={styles.section}>
+          <View style={ styles.section }>
             <Icon name="location-on" />
-            <Text style={styles.sectionTitle} numberOfLines={2}>{ location }</Text>
+            <Text style={ styles.sectionTitle } numberOfLines={2}>{ location }</Text>
           </View>
         </TouchableHighlight>
 
         <Divider></Divider>
 
-        <TouchableHighlight underlayColor="#ccc" >
-          <View style={styles.section}>
+        <TouchableHighlight underlayColor="#ccc" onPress={Actions.schedule}>
+          <View style={ styles.section }>
             <Icon name="schedule" />
-            <Text style={styles.sectionTitle}>{t(".schedule")}</Text>
+            <Text style={styles.sectionTitle}>{ t(".schedule" )}</Text>
           </View>
         </TouchableHighlight>
-
-        <View style={styles.schedules}>
-
-	        <TouchableHighlight style={[styles.addSchedule]} underlayColor="#ccc" onPress={Actions.schedule}>
-	          <View style={[styles.row]}>
-	            <Icon name="add" />
-	            <Text>{t(".addSchedule")}</Text>
-	          </View>
-	        </TouchableHighlight>
-        </View>
 
         <Divider></Divider>
       </Screen>
@@ -116,6 +122,7 @@ var styles = StyleSheet.create({
   image: {
     height: 150,
     alignSelf: 'stretch',
+    justifyContent: 'flex-end',
   },
   sectionTitle: {
     marginLeft: 10,
@@ -149,6 +156,14 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  }
+  },
+  removeImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "black",
+    opacity: .8,
+    flexDirection: 'row',
+    padding: 10,
+  },
 });
 

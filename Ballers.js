@@ -25,8 +25,8 @@ export default class Ballers extends React.Component {
         <Schema name="withoutAnimation"/>
 
         <Route name="newCourt" component={NewCourt} type="jump" />
-        <Route name="courts" component={Courts}  type="reset" />
         <Route name="schedule" component={Schedule} />
+        <Route name="courts" component={Courts}  type="reset" />
         <Route name="location" component={Location} type="jump" />
         <Route name="map" component={MapExample} />
       </Router>

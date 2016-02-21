@@ -9,7 +9,7 @@ export const Colors = {
   RGBPrimary: "41,41,41",
   Accent: "#259b23",
   RGBAccent: "37,155,35",
-  LightGray: "#ccc",
+  White: 'rgba(255,255,255,.87)',
 }
 
 setTheme({
@@ -63,7 +63,18 @@ I18n.translations = {
     date: {
       abbr_day_names: ["Sun", "Mon", "Tus", "Wed", "Thu", "Fri", "Sat"],
     },
+
+    cancel: "Cancel",
     done: "Done",
+    remove: "Remove",
+
+    components: {
+      imagePickerButton: {
+        title: "Select a Photo",
+        takePhoto: "Take a Photo...",
+        chooseFromLibrary: "Choose from Galery...",
+      }
+    },
 
     screens: {
       courts: {
@@ -97,7 +108,18 @@ I18n.translations = {
     date: {
       abbr_day_names: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
     },
+
+    cancel: "Cancelar",
     done: "Feito",
+    remove: "Remover",
+
+    components: {
+      imagePickerButton: {
+        title: "Selecionar Foto",
+        takePhoto: "Tirar uma Foto",
+        chooseFromLibrary: "Escolher uma foto da Galeria...",
+      }
+    },
 
     screens: {
       courts: {
