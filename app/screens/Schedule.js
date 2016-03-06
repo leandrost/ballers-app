@@ -6,57 +6,96 @@ import React, {
   Picker,
   NativeModules,
   TouchableHighlight,
-} from 'react-native';
+} from "react-native";
 
 import {
   Button,
-  CheckboxGroup,
   Avatar,
 } from 'react-native-material-design';
 
-import {
-  MKCheckbox,
-  MKButton,
-  MKColor,
-} from 'react-native-material-kit';
+import { MKButton, } from 'react-native-material-kit';
 
 import Screen from '../components/Screen';
 import { T }  from '../utils/';
 import { Colors }  from '../utils/';
 import { Actions } from 'react-native-router-flux';
-import  moment  from 'moment';
+import moment from 'moment';
+import update from 'react-addons-update';
 
 const DateAndroid = NativeModules.DateAndroid;
-const HH_MM = "HH:mm";
-let t = T("screens.schedule");
+const t = T("screens.schedule");
 
-class WeekdayCheck extends React.Component {
+const DAY_NAMES = t("date.abbr_day_names");
+const HH_MM = "HH:mm";
+
+class Weekdays extends React.Component {
 
   constructor(props) {
     super(props);
-    let stateColor = this.isCurrentDayWeek() ? Colors.Accent : null;
-    this.state = { statusColor: stateColor, }
+    let selected = this.props.selected || [this.currentDay()];
+    this.state = { selected: selected };
   }
 
-  isCurrentDayWeek(){
-    return (moment().format("d") == this.props.dayNumber);
+  currentDay() {
+    let day =  moment().format("d");
+    return parseInt(day);
   }
 
-  toggle() {
-    let color = this.state.statusColor ?  null : Colors.Accent;
-    this.setState({ statusColor: color });
+  isCurrentWeekday(dayNumber){
+    return (this.currentDay() == dayNumber);
+  }
+
+  isSelected(dayNumber) {
+    let index = this.state.selected.indexOf(dayNumber);
+    return index >= 0;
+  }
+
+  handlePress(day) {
+    let data = { selected: { $push : [day] } };
+    if (this.isSelected(day)) {
+      let index = this.state.selected.indexOf(day);
+      let newSelected = this.state.selected.filter((x,i) => i != index);
+      console.log(newSelected);
+      data = { selected: { $set : newSelected } };
+    }
+    let selectedState = update(this.state, data);
+    this.setState(selectedState);
+  }
+
+  renderWeekday(day){
+    let isSelected = this.isSelected(day);
+    let selectedWeekday = isSelected ? styles.selected : null;
+    let selectedLabel = isSelected ? styles.selectedLabel : null;
+
+    return (
+      <TouchableHighlight
+        style={ [styles.weekday, selectedWeekday] }
+        underlayColor={Colors.Accent}
+        onPress={ () => this.handlePress(day) }
+      >
+        <Text style={ [styles.label, selectedLabel] } >
+          { DAY_NAMES[day] }
+        </Text>
+      </TouchableHighlight>
+    );
   }
 
   render() {
-    let dayNames = t("date.abbr_day_names");
     return (
-      <TouchableHighlight
-        style={[styles.weekday, { backgroundColor: this.state.statusColor }]}
-        underlayColor={Colors.Accent}
-        onPress={ this.toggle.bind(this) }
-      >
-        <Text style={styles.label}>{ dayNames[this.props.dayNumber] }</Text>
-      </TouchableHighlight>
+      <View>
+        <View style={styles.row}>
+          { this.renderWeekday(0) }
+          { this.renderWeekday(1) }
+          { this.renderWeekday(2) }
+          { this.renderWeekday(3) }
+        </View>
+
+        <View style={styles.row}>
+          { this.renderWeekday(4) }
+          { this.renderWeekday(5) }
+          { this.renderWeekday(6) }
+        </View>
+      </View>
     );
   }
 
@@ -70,6 +109,7 @@ export default class Schedule extends React.Component {
       repetition: "weekly",
       startAt: this.nextHour(),
       endAt: null,
+      weekdays: [];
     }
   }
 
@@ -117,18 +157,7 @@ export default class Schedule extends React.Component {
           <Picker.Item label={ t(".oneTime") } value="one-time" />
         </Picker>
 
-        <View style={styles.row}>
-          <WeekdayCheck dayNumber={0} />
-          <WeekdayCheck dayNumber={1} />
-          <WeekdayCheck dayNumber={2} />
-          <WeekdayCheck dayNumber={3} />
-        </View>
-
-        <View style={styles.row}>
-          <WeekdayCheck dayNumber={4} />
-          <WeekdayCheck dayNumber={5} />
-          <WeekdayCheck dayNumber={6} />
-        </View>
+        <Weekdays />
 
         <View style={[styles.row, styles.schedule]}>
           <Text style={styles.label}>
@@ -184,8 +213,14 @@ let styles = StyleSheet.create({
     width: 70,
     height: 70,
   },
+  selected: {
+    backgroundColor: Colors.Accent,
+  },
   label: {
     color: "black",
+  },
+  selectedLabel: {
+    color: "white",
   },
   time: {
     flex: 1,
