@@ -16,6 +16,7 @@ import {
 import { MKButton, } from 'react-native-material-kit';
 
 import Screen from '../components/Screen';
+import { Weekdays } from '../components/Weekdays';
 import { T }  from '../utils/';
 import { Colors }  from '../utils/';
 import { Actions } from 'react-native-router-flux';
@@ -25,81 +26,7 @@ import update from 'react-addons-update';
 const DateAndroid = NativeModules.DateAndroid;
 const t = T("screens.schedule");
 
-const DAY_NAMES = t("date.abbr_day_names");
 const HH_MM = "HH:mm";
-
-class Weekdays extends React.Component {
-
-  constructor(props) {
-    super(props);
-    let selected = this.props.selected || [this.currentDay()];
-    this.state = { selected: selected };
-  }
-
-  currentDay() {
-    let day =  moment().format("d");
-    return parseInt(day);
-  }
-
-  isCurrentWeekday(dayNumber){
-    return (this.currentDay() == dayNumber);
-  }
-
-  isSelected(dayNumber) {
-    let index = this.state.selected.indexOf(dayNumber);
-    return index >= 0;
-  }
-
-  handlePress(day) {
-    let data = { selected: { $push : [day] } };
-    if (this.isSelected(day)) {
-      let index = this.state.selected.indexOf(day);
-      let newSelected = this.state.selected.filter((x,i) => i != index);
-      console.log(newSelected);
-      data = { selected: { $set : newSelected } };
-    }
-    let selectedState = update(this.state, data);
-    this.setState(selectedState);
-  }
-
-  renderWeekday(day){
-    let isSelected = this.isSelected(day);
-    let selectedWeekday = isSelected ? styles.selected : null;
-    let selectedLabel = isSelected ? styles.selectedLabel : null;
-
-    return (
-      <TouchableHighlight
-        style={ [styles.weekday, selectedWeekday] }
-        underlayColor={Colors.Accent}
-        onPress={ () => this.handlePress(day) }
-      >
-        <Text style={ [styles.label, selectedLabel] } >
-          { DAY_NAMES[day] }
-        </Text>
-      </TouchableHighlight>
-    );
-  }
-
-  render() {
-    return (
-      <View>
-        <View style={styles.row}>
-          { this.renderWeekday(0) }
-          { this.renderWeekday(1) }
-          { this.renderWeekday(2) }
-          { this.renderWeekday(3) }
-        </View>
-
-        <View style={styles.row}>
-          { this.renderWeekday(4) }
-          { this.renderWeekday(5) }
-          { this.renderWeekday(6) }
-        </View>
-      </View>
-    );
-  }
-
-}
 
 export default class Schedule extends React.Component {
 
@@ -109,7 +36,8 @@ export default class Schedule extends React.Component {
       repetition: "weekly",
       startAt: this.nextHour(),
       endAt: null,
-      weekdays: [];
+      weekdays: [],
+      date: null,
     }
   }
 
@@ -136,6 +64,11 @@ export default class Schedule extends React.Component {
     return now.format("HH:00");
   }
 
+  handleWeekdayChange(weekdays) {
+    console.log(weekdays);
+    this.setState({ weekdays: weekdays });
+  }
+
   handlAddSchedule() {
     console.log(this.state);
   }
@@ -153,11 +86,10 @@ export default class Schedule extends React.Component {
           selectedValue={this.state.repetition}
           onValueChange={(value) => this.setState({repetition: value})}>
           <Picker.Item label={ t(".weekly")  } value="weekly" />
-          <Picker.Item label={ t(".monthly") } value="monthly" />
           <Picker.Item label={ t(".oneTime") } value="one-time" />
         </Picker>
 
-        <Weekdays />
+        <Weekdays onChange={ this.handleWeekdayChange.bind(this) } />
 
         <View style={[styles.row, styles.schedule]}>
           <Text style={styles.label}>
@@ -201,26 +133,6 @@ let styles = StyleSheet.create({
   },
   repetition: {
     width: 150,
-  },
-  weekday: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 3,
-    borderRadius: 35,
-    borderWidth: 0.5,
-    borderColor: Colors.Accent,
-    padding: 10,
-    width: 70,
-    height: 70,
-  },
-  selected: {
-    backgroundColor: Colors.Accent,
-  },
-  label: {
-    color: "black",
-  },
-  selectedLabel: {
-    color: "white",
   },
   time: {
     flex: 1,

@@ -57,6 +57,10 @@ export function T (defaultScope) {
   }
 }
 
+export function t (scope, options) {
+  return I18n.t(scope, options);
+}
+
 I18n.fallbacks = true;
 I18n.translations = {
   'en': {

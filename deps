@@ -1,0 +1,2 @@
+# Libraries needed in Ubuntu 15.10
+sudo apt-get install gcc-multilib lib32z1 openjdk-8-jre
