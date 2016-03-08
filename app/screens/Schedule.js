@@ -27,17 +27,19 @@ const DateAndroid = NativeModules.DateAndroid;
 const t = T("screens.schedule");
 
 const HH_MM = "HH:mm";
+const YYYY_MM_DD = "YYYY-MM-DD";
 
 export default class Schedule extends React.Component {
 
   constructor(props) {
     super(props);
+    now = moment();
     this.state = {
-      repetition: "weekly",
+      repetition: "one-time",
       startAt: this.nextHour(),
       endAt: null,
-      weekdays: [],
-      date: null,
+      weekdays: [now.day()],
+      date: now,
     }
   }
 
@@ -73,51 +75,83 @@ export default class Schedule extends React.Component {
     console.log(this.state);
   }
 
+  handlePressOneTime() {
+    let setDate = (year, month, day) => {
+      this.setState({ date: moment([year, month, day]) });
+    }
+    DateAndroid.showDatepickerWithInitialDate(this.state.date, () => {}, setDate);
+  }
+
+  renderRepetion() {
+    if (this.state.repetition == "weekly") {
+      return this.renderWeekly();
+    }
+    return this.renderOneTime();
+  }
+
+  renderWeekly() {
+    return (
+      <Weekdays
+        selected={ this.state.weekdays }
+        onChange={ this.handleWeekdayChange.bind(this) } />
+    );
+  }
+
+  renderOneTime() {
+    return (
+      <TouchableHighlight
+        style={ styles.date }
+        underlayColor="#ccc"
+        onPress={this.handlePressOneTime.bind(this)}>
+        <Text>
+          {this.state.date.format("dddd DD MMMM YYYY")}
+        </Text>
+      </TouchableHighlight>
+    )
+  }
+
 	render() {
 		return (
-			<Screen {...this.props}
-			icon="arrow-back"
-			onIconPress={Actions.pop}
-			>
+      <Screen {...this.props} icon="arrow-back" onIconPress={Actions.pop} >
 
-      <View style={ styles.container }>
-        <Picker
-          style={styles.repetition}
-          selectedValue={this.state.repetition}
-          onValueChange={(value) => this.setState({repetition: value})}>
-          <Picker.Item label={ t(".weekly")  } value="weekly" />
-          <Picker.Item label={ t(".oneTime") } value="one-time" />
-        </Picker>
+        <View style={ styles.container }>
+          <Picker
+            style={styles.repetition}
+            selectedValue={this.state.repetition}
+            onValueChange={(value) => this.setState({repetition: value})}>
+            <Picker.Item label={ t(".weekly")  } value="weekly" />
+            <Picker.Item label={ t(".oneTime") } value="one-time" />
+          </Picker>
 
-        <Weekdays onChange={ this.handleWeekdayChange.bind(this) } />
+          { this.renderRepetion() }
 
-        <View style={[styles.row, styles.schedule]}>
-          <Text style={styles.label}>
-            { t(".from") }
-          </Text>
-          <TouchableHighlight style={styles.time} underlayColor="#ccc" onPress={this.handleStartAtClick.bind(this)}>
-            <Text>
-              {this.state.startAt}
+          <View style={[styles.row, styles.schedule]}>
+            <Text style={styles.label}>
+              { t(".from") }
             </Text>
-          </TouchableHighlight>
-          <Text style={styles.label}>
-            { t(".to") }
-          </Text>
-          <TouchableHighlight style={styles.time} underlayColor="#ccc" onPress={this.handleEndAtClick.bind(this)}>
-            <Text>
-              {this.state.endAt || t(".endTime")}
+            <TouchableHighlight style={styles.time} underlayColor="#ccc" onPress={this.handleStartAtClick.bind(this)}>
+              <Text>
+                {this.state.startAt}
+              </Text>
+            </TouchableHighlight>
+            <Text style={styles.label}>
+              { t(".to") }
             </Text>
-          </TouchableHighlight>
+            <TouchableHighlight style={styles.time} underlayColor="#ccc" onPress={this.handleEndAtClick.bind(this)}>
+              <Text>
+                {this.state.endAt || t(".endTime")}
+              </Text>
+            </TouchableHighlight>
+          </View>
+
+          <MKButton {...MKButton.coloredButton().toProps()} onPress={ this.handlAddSchedule.bind(this) }>
+            <Text style={{color: 'white', fontWeight: 'bold',}}>
+              { t("done") }
+            </Text>
+          </MKButton>
         </View>
 
-        <MKButton {...MKButton.coloredButton().toProps()} onPress={ this.handlAddSchedule.bind(this) }>
-          <Text style={{color: 'white', fontWeight: 'bold',}}>
-            { t("done") }
-          </Text>
-        </MKButton>
-      </View>
-
-			</Screen>
+      </Screen>
 		)
 	}
 }
@@ -133,6 +167,11 @@ let styles = StyleSheet.create({
   },
   repetition: {
     width: 150,
+  },
+  date: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   time: {
     flex: 1,

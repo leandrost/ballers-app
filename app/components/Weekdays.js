@@ -19,17 +19,8 @@ export class Weekdays extends React.Component {
 
   constructor(props) {
     super(props);
-    let selected = this.props.selected || [this.currentDay()];
+    let selected = props.selected;
     this.state = { selected: selected };
-  }
-
-  currentDay() {
-    let day =  moment().format("d");
-    return parseInt(day);
-  }
-
-  isCurrentWeekday(dayNumber){
-    return (this.currentDay() == dayNumber);
   }
 
   isSelected(dayNumber) {
