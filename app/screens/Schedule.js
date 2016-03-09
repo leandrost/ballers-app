@@ -14,14 +14,13 @@ import {
 } from 'react-native-material-design';
 
 import { MKButton, } from 'react-native-material-kit';
+import update from 'react-addons-update';
+import moment from 'moment';
 
 import Screen from '../components/Screen';
 import { Weekdays } from '../components/Weekdays';
-import { T }  from '../utils/';
-import { Colors }  from '../utils/';
+import { T, Colors }  from '../utils/';
 import { Actions } from 'react-native-router-flux';
-import moment from 'moment';
-import update from 'react-addons-update';
 
 const DateAndroid = NativeModules.DateAndroid;
 const t = T("screens.schedule");
@@ -71,15 +70,17 @@ export default class Schedule extends React.Component {
     this.setState({ weekdays: weekdays });
   }
 
-  handlAddSchedule() {
-    console.log(this.state);
-  }
-
   handlePressOneTime() {
     let setDate = (year, month, day) => {
       this.setState({ date: moment([year, month, day]) });
     }
     DateAndroid.showDatepickerWithInitialDate(this.state.date, () => {}, setDate);
+  }
+
+  handlAddSchedule() {
+    console.log(this.state);
+    this.props.onSelect(this.state);
+    Actions.newCourt();
   }
 
   renderRepetion() {

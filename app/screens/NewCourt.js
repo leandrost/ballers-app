@@ -1,13 +1,13 @@
 import React, {
+  Image,
+  NativeModules,
+  Picker,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
-  NativeModules,
   TextInput,
   TouchableHighlight,
-  Picker,
-  Image,
-  Animated,
+  View,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -23,6 +23,8 @@ import {
 import {
   MKButton,
 } from 'react-native-material-kit';
+
+import update from 'react-addons-update';
 
 
 import Screen from '../components/Screen';
@@ -43,13 +45,18 @@ export default class NewCourt extends React.Component {
       imageSource: { },
       //imageSource: { uri: "http://brianaspinall.com/wp-content/uploads/2015/06/Uli%C4%8Dna-ko%C5%A1arka.jpg" },
       place: { },
+      schedules: [],
       startAt: null,
       endAt: null,
     }
   }
 
   handleLocationPress() {
-    Actions.location({ onPlacePress: this.setPlace.bind(this) })
+    Actions.location({ onPlacePress: this.setPlace.bind(this) });
+  }
+
+  handlePressSchedule() {
+    Actions.schedule({ onSelect: this.addSchedule.bind(this) });
   }
 
   setImage(source) {
@@ -64,43 +71,81 @@ export default class NewCourt extends React.Component {
     this.setState({ place: place });
   }
 
+  addSchedule(schedule) {
+    let attr = { schedules: { $push : [schedule] } };
+    let newState = update(this.state, attr);
+    this.setState(newState);
+    console.log(arguments);
+    console.log("addSchedule: ", this.state);
+  }
+
+  renderSchedules() {
+    return this.state.schedules.map(function(schedule){
+      return (
+        <View>
+          <TouchableHighlight
+            key={schedule.date}
+            underlayColor="#ccc"
+            onPress={this.handlePressSchedule}>
+          
+            <View style={ styles.section }>
+              <Icon name="event" />
+              <Text style={styles.sectionTitle}>
+                { schedule.date.format("dddd DD MMMM YYYY") }  { schedule.startAt } - { schedule.endAt }
+              </Text>
+            </View>
+          </TouchableHighlight>
+          
+          <Divider></Divider>
+        </View>
+      );
+    });
+  }
+
   render(){
     let location = this.state.place.description || t(".location");
 
     return (
       <Screen {...this.props} icon="close" onIconPress={Actions.courts} actions={[{ icon: "done", onPress: this.save }]}>
 
-        <Image style={styles.image} source={this.state.imageSource}>
-          <FlatButton style={styles.removeImage} onPress={ this.removeImage.bind(this) }>
-            <Icon name="delete" color="#fff" size={25} />
-            <Text style={{ color: 'white', fontWeight: 'bold',}}>
-              Remove
-            </Text>
-          </FlatButton>
-        </Image>
+        <ScrollView>
+          <Image style={styles.image} source={this.state.imageSource}>
+            <FlatButton style={styles.removeImage} onPress={ this.removeImage.bind(this) }>
+              <Icon name="delete" color="#fff" size={25} />
+              <Text style={{ color: 'white', fontWeight: 'bold',}}>
+                Remove
+              </Text>
+            </FlatButton>
+          </Image>
 
-        <View style={styles.court}>
-          <TextInput style={styles.courtName} placeholder={t(".courtName")}></TextInput>
-          <ImagePickerButton onSelect={ this.setImage.bind(this) }/>
-        </View>
-
-        <TouchableHighlight underlayColor="#ccc" onPress={this.handleLocationPress.bind(this)}>
-          <View style={ styles.section }>
-            <Icon name="location-on" />
-            <Text style={ styles.sectionTitle } numberOfLines={2}>{ location }</Text>
+          <View style={styles.court}>
+            <TextInput style={styles.courtName} placeholder={t(".courtName")}></TextInput>
+            <ImagePickerButton onSelect={ this.setImage.bind(this) }/>
           </View>
-        </TouchableHighlight>
 
-        <Divider></Divider>
+          <TouchableHighlight underlayColor="#ccc" onPress={this.handleLocationPress.bind(this)}>
+            <View style={ styles.section }>
+              <Icon name="location-on" />
+              <Text style={ styles.sectionTitle } numberOfLines={2}>{ location }</Text>
+            </View>
+          </TouchableHighlight>
 
-        <TouchableHighlight underlayColor="#ccc" onPress={Actions.schedule}>
-          <View style={ styles.section }>
-            <Icon name="schedule" />
-            <Text style={styles.sectionTitle}>{ t(".schedule" )}</Text>
-          </View>
-        </TouchableHighlight>
+          <Divider></Divider>
+          { this.renderSchedules() }
 
-        <Divider></Divider>
+          <TouchableHighlight
+            underlayColor="#ccc"
+            onPress={this.handlePressSchedule.bind(this)}>
+
+            <View style={ styles.section }>
+              <Icon name="add" />
+              <Text style={styles.sectionTitle}>{ t(".schedule" )}</Text>
+            </View>
+          </TouchableHighlight>
+
+          <Divider></Divider>
+
+        </ScrollView>
       </Screen>
     );
   }
