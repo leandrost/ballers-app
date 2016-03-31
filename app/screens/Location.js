@@ -47,7 +47,12 @@ export default class Location extends React.Component {
   handlePlacePress (data, details){
     let callback = this.props.onPlacePress;
     if (callback) {
-      callback({ description: data.description });
+      console.log(data);
+      console.log(details);
+      callback({
+        address: details.formatted_address,
+        location: details.geometry.location,
+      });
     }
     Actions.pop();
   }
